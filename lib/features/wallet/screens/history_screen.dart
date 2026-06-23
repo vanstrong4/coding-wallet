@@ -81,6 +81,31 @@ class HistoryScreen extends StatelessWidget {
               final amount = data['amount'] ?? 0;
 
               final color = _getColor(type);
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: color.withOpacity(0.15),
+                      child: Icon(_getIcon(type), color: color),
+                    ),
+
+                    const SizedBox(width: 12),
+                  ],
+                ),
+              );
             },
           );
         },
