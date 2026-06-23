@@ -70,6 +70,19 @@ class HistoryScreen extends StatelessWidget {
           if (docs.isEmpty) {
             return const Center(child: Text("Belum ada transaksi"));
           }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: docs.length,
+            itemBuilder: (context, index) {
+              final data = docs[index].data() as Map<String, dynamic>;
+
+              final type = data['type'] ?? '';
+              final amount = data['amount'] ?? 0;
+
+              final color = _getColor(type);
+            },
+          );
         },
       ),
     );
