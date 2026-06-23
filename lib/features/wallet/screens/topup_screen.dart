@@ -94,6 +94,15 @@ class _TopUpScreenState extends State<TopUpScreen> {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: const Color(0xFF1565C0)),
         ),
+        child: Text(
+          "Rp ${amount ~/ 1000}K",
+          style: TextStyle(
+            color: selectedAmount == amount
+                ? Colors.white
+                : const Color(0xFF1565C0),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
