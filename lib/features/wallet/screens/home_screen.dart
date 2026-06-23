@@ -45,7 +45,20 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: const Color(0xFF1565C0),
         automaticallyImplyLeading: false,
-        actions: [],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: () async {
+              await auth.signOut();
+
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => LoginScreen()),
+                (route) => false,
+              );
+            },
+          ),
+        ],
       ),
     );
   }
