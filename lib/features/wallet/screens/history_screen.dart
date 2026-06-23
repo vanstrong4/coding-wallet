@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -58,17 +59,23 @@ class HistoryScreen extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection('transactions')
             .where('userId', isEqualTo: uid)
+            .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final docs = snapshot.data!.docs;
-
-          if (docs.isEmpty) {
-            return const Center(child: Text("Belum ada transaksi"));
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text(
+                "Belum ada transaksi",
+                style: TextStyle(fontSize: 16),
+              ),
+            );
           }
+
+          final docs = snapshot.data!.docs;
 
           return ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -77,7 +84,22 @@ class HistoryScreen extends StatelessWidget {
               final data = docs[index].data() as Map<String, dynamic>;
 
               final type = data['type'] ?? '';
-              final amount = data['amount'] ?? 0;
+
+              int amount = 0;
+
+              if (type == 'topup') {
+                amount = (data['amount'] ?? 0) as int;
+              } else if (type == 'purchase') {
+                amount = (data['total'] ?? 0) as int;
+              }
+
+              final status = data['status'] ?? 'success';
+
+              final Timestamp? createdAt = data['createdAt'] as Timestamp?;
+
+              final date = createdAt != null
+                  ? DateFormat('dd MMM yyyy, HH:mm').format(createdAt.toDate())
+                  : '-';
 
               final color = _getColor(type);
 
@@ -91,12 +113,15 @@ class HistoryScreen extends StatelessWidget {
                     BoxShadow(
                       color: Colors.black.withOpacity(0.05),
                       blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
+
                 child: Row(
                   children: [
                     CircleAvatar(
+                      radius: 24,
                       backgroundColor: color.withOpacity(0.15),
                       child: Icon(_getIcon(type), color: color),
                     ),
@@ -109,16 +134,52 @@ class HistoryScreen extends StatelessWidget {
                         children: [
                           Text(
                             _getTitle(type),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
                           ),
+
                           const SizedBox(height: 4),
+
                           Text(
                             type == 'topup'
                                 ? "Saldo masuk ke wallet"
-                                : "Pembelian di marketplace",
+                                : "Pembelian di Marketplace",
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 12,
+                            ),
+                          ),
+
+                          const SizedBox(height: 4),
+
+                          Text(
+                            date,
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: 11,
+                            ),
+                          ),
+
+                          const SizedBox(height: 6),
+
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: color.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              status.toUpperCase(),
+                              style: TextStyle(
+                                color: color,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                              ),
                             ),
                           ),
                         ],
@@ -126,9 +187,12 @@ class HistoryScreen extends StatelessWidget {
                     ),
 
                     Text(
-                      type == 'topup' ? "+ Rp $amount" : "- Rp $amount",
+                      type == 'topup'
+                          ? "+ Rp ${NumberFormat('#,###', 'id_ID').format(amount)}"
+                          : "- Rp ${NumberFormat('#,###', 'id_ID').format(amount)}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        fontSize: 15,
                         color: color,
                       ),
                     ),
