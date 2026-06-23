@@ -189,6 +189,19 @@ class HomeScreen extends StatelessWidget {
                       ),
 
                       const SizedBox(width: 16),
+
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const HistoryScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
