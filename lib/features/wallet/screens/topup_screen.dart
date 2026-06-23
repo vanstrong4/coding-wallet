@@ -139,6 +139,23 @@ class _TopUpScreenState extends State<TopUpScreen> {
                     ),
                     borderRadius: BorderRadius.circular(24),
                   ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Saldo Saat Ini",
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "Rp $balance",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
 
                 const SizedBox(height: 30),
