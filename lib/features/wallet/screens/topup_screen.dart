@@ -159,6 +159,24 @@ class _TopUpScreenState extends State<TopUpScreen> {
                 ),
 
                 const SizedBox(height: 30),
+
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Pilih Nominal",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: quickAmounts.map((e) => quickButton(e)).toList(),
+                ),
+
+                const SizedBox(height: 30),
               ],
             ),
           );
