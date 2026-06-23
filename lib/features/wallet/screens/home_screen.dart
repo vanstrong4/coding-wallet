@@ -233,6 +233,20 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+
+                const SizedBox(height: 30),
+
+                /// INFO CARD
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                  ),
+                ),
               ],
             ),
           );
