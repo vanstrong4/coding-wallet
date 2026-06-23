@@ -245,6 +245,17 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(18),
                     ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.security, color: Color(0xFF1565C0)),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            "Your wallet is secured with PIN verification before every payment.",
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
