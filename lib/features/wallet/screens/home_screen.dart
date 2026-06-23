@@ -88,6 +88,28 @@ class HomeScreen extends StatelessWidget {
                       bottomRight: Radius.circular(30),
                     ),
                   ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Welcome ${data['name']}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      Text(
+                        data['email'],
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+
+                      const SizedBox(height: 30),
+                    ],
+                  ),
                 ),
               ],
             ),
