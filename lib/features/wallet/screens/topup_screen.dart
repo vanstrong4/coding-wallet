@@ -120,6 +120,13 @@ class _TopUpScreenState extends State<TopUpScreen> {
         backgroundColor: const Color(0xFF1565C0),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
+
+      body: FutureBuilder<int>(
+        future: getBalance(),
+        builder: (context, snapshot) {
+          final balance = snapshot.data ?? 0;
+        },
+      ),
     );
   }
 }
