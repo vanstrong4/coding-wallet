@@ -169,9 +169,26 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.account_balance_wallet,
+                                  size: 40,
+                                  color: Color(0xFF1565C0),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "Top Up",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
+
+                      const SizedBox(width: 16),
                     ],
                   ),
                 ),
