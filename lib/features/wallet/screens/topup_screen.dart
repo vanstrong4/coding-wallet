@@ -27,4 +27,64 @@ class _TopUpScreenState extends State<TopUpScreen> {
 
     return (doc.data()?['balance'] ?? 0) as int;
   }
+
+  Future<void> topUp() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    final amount = int.tryParse(amountController.text) ?? 0;
+
+    if (amount <= 0) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Nominal tidak valid")));
+      return;
+    }
+
+    setState(() => loading = true);
+
+    try {
+      final walletRef = FirebaseFirestore.instance
+          .collection('wallets')
+          .doc(uid);
+
+      await FirebaseFirestore.instance.runTransaction((trx) async {
+        final walletSnap = await trx.get(walletRef);
+
+        final currentBalance = (walletSnap.data()?['balance'] ?? 0) as int;
+
+        trx.update(walletRef, {'balance': currentBalance + amount});
+      });
+
+      await FirebaseFirestore.instance.collection('transactions').add({
+        'userId': uid,
+        'type': 'topup',
+        'amount': amount,
+        'status': 'success',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Top Up berhasil")));
+
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Gagal: $e")));
+    }
+
+    setState(() => loading = false);
+  }
+
+  Widget quickButton(int amount) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedAmount = amount;
+          amountController.text = amount.toString();
+        });
+      },
+    );
+  }
 }
