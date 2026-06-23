@@ -53,6 +53,14 @@ class HistoryScreen extends StatelessWidget {
         backgroundColor: const Color(0xFF1565C0),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
+
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('transactions')
+            .where('userId', isEqualTo: uid)
+            .orderBy('createdAt', descending: true)
+            .snapshots(),
+      ),
     );
   }
 }
