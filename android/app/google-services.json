@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "315129263820",
+    "project_id": "marketplace-codingstore",
+    "storage_bucket": "marketplace-codingstore.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315129263820:android:0737667a33ae035e7a7469",
+        "android_client_info": {
+          "package_name": "com.example.evan_machine_store"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj3FLwgUQn5KEJuiA15FGPPaul0sKUZm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315129263820:android:934893f27ee33b957a7469",
+        "android_client_info": {
+          "package_name": "com.example.wallet_coding_store_evand"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj3FLwgUQn5KEJuiA15FGPPaul0sKUZm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
