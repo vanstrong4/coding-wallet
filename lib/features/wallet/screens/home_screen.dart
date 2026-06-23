@@ -70,10 +70,28 @@ class HomeScreen extends StatelessWidget {
 
           final data = snapshot.data!;
 
-          return SingleChildScrollView(child: Column(children: [
-             
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                /// HEADER
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF1565C0), Color(0xFF42A5F5)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
+                    ),
+                  ),
+                ),
               ],
-            ));
+            ),
+          );
         },
       ),
     );
