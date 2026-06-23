@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../screens/login_screen.dart';
 import '../../wallet/screens/home_screen.dart';
 
@@ -22,8 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) =>
-              user == null ? const LoginScreen() : const HomeScreen(),
+          builder: (_) => user == null ? LoginScreen() : HomeScreen(),
         ),
       );
     });
@@ -34,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return const Scaffold(
       body: Center(
         child: Text(
-          "Coding Wallet",
+          "Coding Store Wallet",
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
       ),
