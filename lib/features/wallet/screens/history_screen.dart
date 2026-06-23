@@ -58,7 +58,6 @@ class HistoryScreen extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection('transactions')
             .where('userId', isEqualTo: uid)
-            .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {

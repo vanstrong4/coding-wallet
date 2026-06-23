@@ -55,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                         const SizedBox(height: 8),
 
                         const Text(
-                          "Masuk ke akun kamu",
+                          "Masuk ke wallet kamu",
                           style: TextStyle(color: Colors.lightBlue),
                         ),
 
