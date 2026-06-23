@@ -42,6 +42,17 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
-    return Scaffold(backgroundColor: const Color(0xFFF5F7FB));
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FB),
+
+      appBar: AppBar(
+        title: const Text(
+          "Transaction History",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF1565C0),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+    );
   }
 }
