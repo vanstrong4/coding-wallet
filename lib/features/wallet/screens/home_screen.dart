@@ -108,6 +108,34 @@ class HomeScreen extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 30),
+
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          children: [
+                            const Text(
+                              "Saldo Wallet",
+                              style: TextStyle(color: Colors.white70),
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            Text(
+                              "Rp ${data['balance']}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
