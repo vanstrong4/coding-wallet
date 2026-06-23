@@ -113,6 +113,15 @@ class HistoryScreen extends StatelessWidget {
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
+                          Text(
+                            type == 'topup'
+                                ? "Saldo masuk ke wallet"
+                                : "Pembelian di marketplace",
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
