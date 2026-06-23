@@ -125,6 +125,11 @@ class _TopUpScreenState extends State<TopUpScreen> {
         future: getBalance(),
         builder: (context, snapshot) {
           final balance = snapshot.data ?? 0;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(children: [const SizedBox(height: 30)]),
+          );
         },
       ),
     );
