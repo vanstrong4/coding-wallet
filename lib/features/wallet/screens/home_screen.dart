@@ -34,6 +34,19 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: const Color(0xFFF5F7FB));
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FB),
+
+      appBar: AppBar(
+        title: const Text(
+          "Coding Wallet",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF1565C0),
+        automaticallyImplyLeading: false,
+        actions: [],
+      ),
+    );
   }
 }
