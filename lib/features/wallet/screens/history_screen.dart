@@ -125,6 +125,14 @@ class HistoryScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+
+                    Text(
+                      type == 'topup' ? "+ Rp $amount" : "- Rp $amount",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: color,
+                      ),
+                    ),
                   ],
                 ),
               );
