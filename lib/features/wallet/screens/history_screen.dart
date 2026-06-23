@@ -103,6 +103,19 @@ class HistoryScreen extends StatelessWidget {
                     ),
 
                     const SizedBox(width: 12),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _getTitle(type),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 4),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               );
