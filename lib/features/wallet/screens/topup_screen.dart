@@ -128,7 +128,22 @@ class _TopUpScreenState extends State<TopUpScreen> {
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
-            child: Column(children: [const SizedBox(height: 30)]),
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF1565C0), Color(0xFF42A5F5)],
+                    ),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+
+                const SizedBox(height: 30),
+              ],
+            ),
           );
         },
       ),
