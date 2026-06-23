@@ -109,6 +109,17 @@ class _TopUpScreenState extends State<TopUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: const Color(0xFFF5F7FB));
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FB),
+
+      appBar: AppBar(
+        title: const Text(
+          "Top Up Wallet",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF1565C0),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+    );
   }
 }
