@@ -85,6 +85,16 @@ class _TopUpScreenState extends State<TopUpScreen> {
           amountController.text = amount.toString();
         });
       },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        decoration: BoxDecoration(
+          color: selectedAmount == amount
+              ? const Color(0xFF1565C0)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color(0xFF1565C0)),
+        ),
+      ),
     );
   }
 }
