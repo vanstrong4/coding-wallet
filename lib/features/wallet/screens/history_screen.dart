@@ -60,6 +60,17 @@ class HistoryScreen extends StatelessWidget {
             .where('userId', isEqualTo: uid)
             .orderBy('createdAt', descending: true)
             .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final docs = snapshot.data!.docs;
+
+          if (docs.isEmpty) {
+            return const Center(child: Text("Belum ada transaksi"));
+          }
+        },
       ),
     );
   }
