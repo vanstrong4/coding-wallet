@@ -60,6 +60,22 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: getUserData(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final data = snapshot.data!;
+
+          return SingleChildScrollView(child: Column(children: [
+             
+              ],
+            ));
+        },
+      ),
     );
   }
 }
