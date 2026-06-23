@@ -177,6 +177,22 @@ class _TopUpScreenState extends State<TopUpScreen> {
                 ),
 
                 const SizedBox(height: 30),
+
+                TextField(
+                  controller: amountController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: "Nominal Top Up",
+                    prefixText: "Rp ",
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 30),
               ],
             ),
           );
