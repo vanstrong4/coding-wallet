@@ -200,6 +200,34 @@ class HomeScreen extends StatelessWidget {
                               ),
                             );
                           },
+                          child: Container(
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                ),
+                              ],
+                            ),
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.receipt_long,
+                                  size: 40,
+                                  color: Color(0xFF1565C0),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "History",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
