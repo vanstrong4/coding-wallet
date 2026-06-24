@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../data/services/auth_service.dart';
 import '../../../widgets/custom_button.dart';
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../widgets/custom_textfield.dart';
 import '../../../features/wallet/screens/home_screen.dart';
+import '../../auth/screens/otp_totp_authenticator.dart';
+import '../../../data/services/email_service.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -11,6 +15,10 @@ class LoginScreen extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final auth = AuthService();
+  String generateOtp() {
+    final random = Random();
+    return (100000 + random.nextInt(900000)).toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,25 +114,48 @@ class LoginScreen extends StatelessWidget {
                             }
 
                             try {
-                              await auth.signIn(email, password);
+                              final user = await auth.signIn(email, password);
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Login berhasil")),
+                              final otp = generateOtp();
+
+                              await FirebaseFirestore.instance
+                                  .collection('otp_codes')
+                                  .doc(user.uid)
+                                  .set({
+                                    'otp': otp,
+                                    'expiresAt': Timestamp.fromDate(
+                                      DateTime.now().add(
+                                        const Duration(minutes: 5),
+                                      ),
+                                    ),
+                                  });
+
+                              await EmailService().sendOtp(
+                                email: user.email!,
+                                otp: otp,
                               );
 
-                              Navigator.pushReplacement(
+                              final verified = await Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => HomeScreen()),
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    e.toString().contains("verifikasi")
-                                        ? "Email belum diverifikasi, cek inbox kamu"
-                                        : "Email atau password salah",
-                                  ),
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      const AuthVerificationScreen(),
                                 ),
+                              );
+
+                              if (verified == true) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => HomeScreen(),
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              print("LOGIN ERROR: $e");
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())),
                               );
                             }
                           },
