@@ -6,7 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../widgets/custom_textfield.dart';
 import '../../../features/wallet/screens/home_screen.dart';
 import '../../auth/screens/otp_totp_authenticator.dart';
-import '../../../data/services/email_service.dart';
+import '../../../data/services/authenticator_service.dart';
+import '../screens/setup_authenticator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -93,7 +95,6 @@ class LoginScreen extends StatelessWidget {
                             String email = emailController.text.trim();
                             String password = passwordController.text.trim();
 
-                            // cek kosong
                             if (email.isEmpty || password.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -103,7 +104,6 @@ class LoginScreen extends StatelessWidget {
                               return;
                             }
 
-                            // validasi email
                             if (!email.contains("@")) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -116,30 +116,51 @@ class LoginScreen extends StatelessWidget {
                             try {
                               final user = await auth.signIn(email, password);
 
-                              final otp = generateOtp();
+                              final userDoc = FirebaseFirestore.instance
+                                  .collection('wallets')
+                                  .doc(user.uid);
 
-                              await FirebaseFirestore.instance
-                                  .collection('otp_codes')
-                                  .doc(user.uid)
-                                  .set({
-                                    'otp': otp,
-                                    'expiresAt': Timestamp.fromDate(
-                                      DateTime.now().add(
-                                        const Duration(minutes: 5),
-                                      ),
+                              final doc = await userDoc.get();
+
+                              String? authSecret;
+
+                              if (!doc.exists) {
+                                await userDoc.set({
+                                  'email': user.email,
+                                  'authSecret': null,
+                                  'createdAt': Timestamp.now(),
+                                });
+
+                                authSecret = null;
+                              } else {
+                                authSecret = doc.data()?['authSecret'];
+                              }
+
+                              if (authSecret == null || authSecret.isEmpty) {
+                                authSecret =
+                                    AuthenticatorService.generateSecret();
+
+                                await userDoc.update({
+                                  'authSecret': authSecret,
+                                });
+
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => SetupAuthenticatorScreen(
+                                      email: user.email!,
+                                      secret: authSecret!,
                                     ),
-                                  });
-
-                              await EmailService().sendOtp(
-                                email: user.email!,
-                                otp: otp,
-                              );
+                                  ),
+                                );
+                              }
 
                               final verified = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                      const AuthVerificationScreen(),
+                                  builder: (_) => AuthVerificationScreen(
+                                    secret: authSecret!,
+                                  ),
                                 ),
                               );
 
@@ -150,10 +171,10 @@ class LoginScreen extends StatelessWidget {
                                     builder: (_) => HomeScreen(),
                                   ),
                                 );
+                              } else {
+                                await FirebaseAuth.instance.signOut();
                               }
                             } catch (e) {
-                              print("LOGIN ERROR: $e");
-
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(e.toString())),
                               );

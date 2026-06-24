@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import '../../../data/services/authenticator_service.dart';
 
 class AuthVerificationScreen extends StatefulWidget {
-  const AuthVerificationScreen({super.key});
+  final String secret;
+
+  const AuthVerificationScreen({super.key, required this.secret});
 
   @override
   State<AuthVerificationScreen> createState() => _AuthVerificationScreenState();
@@ -43,47 +44,25 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
     setState(() => loading = true);
 
     try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final valid = AuthenticatorService.verifyCode(
+        secret: widget.secret,
+        code: pinController.text.trim(),
+      );
 
-      final doc = await FirebaseFirestore.instance
-          .collection('otp_codes')
-          .doc(uid)
-          .get();
-
-      if (!doc.exists) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("OTP tidak ditemukan")));
-        return;
-      }
-
-      final data = doc.data()!;
-      final savedOtp = data['otp'];
-      final expiresAt = (data['expiresAt'] as Timestamp).toDate();
-
-      // ❌ EXPIRED CHECK (5 menit real)
-      if (DateTime.now().isAfter(expiresAt)) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("OTP sudah expired")));
-        return;
-      }
-
-      // ❌ CHECK OTP
-      if (pinController.text.trim() == savedOtp) {
+      if (valid) {
         Navigator.pop(context, true);
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Kode OTP salah")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Kode Google Authenticator salah")),
+        );
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
     }
 
-    setState(() => loading = false);
+    if (mounted) {
+      setState(() => loading = false);
+    }
   }
 
   @override
@@ -127,13 +106,13 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
                     child: Column(
                       children: const [
                         Icon(
-                          Icons.mark_email_read,
+                          Icons.security,
                           color: Colors.greenAccent,
                           size: 60,
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "Verification Code Sent",
+                          "Google Authenticator",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
@@ -154,7 +133,7 @@ class _AuthVerificationScreenState extends State<AuthVerificationScreen> {
                   const SizedBox(height: 8),
 
                   Text(
-                    "Kami telah mengirim kode OTP 6 digit ke email Anda.",
+                    "Masukkan kode 6 digit dari Google Authenticator.",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.grey.shade600),
                   ),
