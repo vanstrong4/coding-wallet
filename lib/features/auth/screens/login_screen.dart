@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 import '../../../data/services/auth_service.dart';
 import '../../../widgets/custom_button.dart';
-import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../widgets/custom_textfield.dart';
 import '../../../features/wallet/screens/home_screen.dart';
-import '../../auth/screens/otp_totp_authenticator.dart';
-import '../../../data/services/authenticator_service.dart';
-import '../screens/setup_authenticator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
-  // ambil input email & password
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final auth = AuthService();
-  String generateOtp() {
-    final random = Random();
-    return (100000 + random.nextInt(900000)).toString();
-  }
+  // Controller untuk input email & password
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  final AuthService auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +36,13 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         const SizedBox(height: 40),
 
-                        // logo evan coding store
+                        // Logo
                         Center(
                           child: Image.asset("images/ecs.png", height: 180),
                         ),
 
                         const SizedBox(height: 20),
 
-                        // judul
                         Text(
                           "Login",
                           style: TextStyle(
@@ -71,7 +61,7 @@ class LoginScreen extends StatelessWidget {
 
                         const SizedBox(height: 30),
 
-                        // input email
+                        // Email
                         CustomTextField(
                           controller: emailController,
                           hint: "Email",
@@ -79,7 +69,7 @@ class LoginScreen extends StatelessWidget {
 
                         const SizedBox(height: 20),
 
-                        // input password
+                        // Password
                         CustomTextField(
                           controller: passwordController,
                           hint: "Password",
@@ -88,12 +78,12 @@ class LoginScreen extends StatelessWidget {
 
                         const SizedBox(height: 30),
 
-                        // tombol login
+                        // Tombol Login
                         CustomButton(
                           text: "Login",
                           onPressed: () async {
-                            String email = emailController.text.trim();
-                            String password = passwordController.text.trim();
+                            final email = emailController.text.trim();
+                            final password = passwordController.text.trim();
 
                             if (email.isEmpty || password.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -114,69 +104,26 @@ class LoginScreen extends StatelessWidget {
                             }
 
                             try {
-                              final user = await auth.signIn(email, password);
+                              await auth.signIn(email, password);
 
-                              final userDoc = FirebaseFirestore.instance
-                                  .collection('wallets')
-                                  .doc(user.uid);
+                              if (!context.mounted) return;
 
-                              final doc = await userDoc.get();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (_) => HomeScreen()),
+                              );
+                            } catch (e) {
+                              if (!context.mounted) return;
 
-                              String? authSecret;
-
-                              if (!doc.exists) {
-                                await userDoc.set({
-                                  'email': user.email,
-                                  'authSecret': null,
-                                  'createdAt': Timestamp.now(),
-                                });
-
-                                authSecret = null;
-                              } else {
-                                authSecret = doc.data()?['authSecret'];
-                              }
-
-                              if (authSecret == null || authSecret.isEmpty) {
-                                authSecret =
-                                    AuthenticatorService.generateSecret();
-
-                                await userDoc.update({
-                                  'authSecret': authSecret,
-                                });
-
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => SetupAuthenticatorScreen(
-                                      email: user.email!,
-                                      secret: authSecret!,
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    e.toString().replaceFirst(
+                                      "Exception: ",
+                                      "",
                                     ),
                                   ),
-                                );
-                              }
-
-                              final verified = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => AuthVerificationScreen(
-                                    secret: authSecret!,
-                                  ),
                                 ),
-                              );
-
-                              if (verified == true) {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => HomeScreen(),
-                                  ),
-                                );
-                              } else {
-                                await FirebaseAuth.instance.signOut();
-                              }
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(e.toString())),
                               );
                             }
                           },
